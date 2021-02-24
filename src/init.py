@@ -7,10 +7,10 @@ from src.human import Human, Status
 def infect_random(humans, number_of_humans):
     """
     a random Human is selected and gets infected
-    
+
     Args:
         number_of_humans (int): amount of humans in the simulation
-        
+
     Returns:
         humans (list): list containing all humans
     """
@@ -18,17 +18,18 @@ def infect_random(humans, number_of_humans):
     humans[random_number].infect()
     return humans
 
-def make_vulnerable(humans, number_of_humans, number_vulnerable_humans, infection_radius, prob): 
+
+def make_vulnerable(humans, number_of_humans, number_vulnerable_humans, infection_radius, prob):
     """
     A certain number of humans becomes gets more vulnerable, which makes it easier for him/her 
     to get infected.
-    
+
     Args: 
         number_of_humans (int): total amount of humans in the simulation
         number_vulnerable_humans (int): amount of humans that are more vulnerable
         infection_radius (float): distance at which a human gets infected
         prob (float): probability of infection for standard humans
-    
+
     Returns:
         humans (list): a list containing all humans (the ones that are more vulnerable and the 
         ones that are not)
@@ -37,22 +38,24 @@ def make_vulnerable(humans, number_of_humans, number_vulnerable_humans, infectio
         random_number = np.random.randint(int(number_of_humans))
         if humans[random_number].infection_radius == infection_radius:
             humans[random_number].infection_radius *= random.gauss(1.9, 0.2)
-            humans[random_number].infection_probability *= random.gauss(1.9, 0.2)
+            humans[random_number].infection_probability *= random.gauss(
+                1.9, 0.2)
             if humans[random_number].infection_probability >= 1:
                 humans[random_number].infection_probability = 0.99
             number_vulnerable_humans -= 1
     return humans
 
+
 def wear_mask(humans, number_of_humans, number_mask_humans, infection_radius, prob):
     """
     A specific number of humans wears a face mask now. Therefore the infection probability
     and the infection radius become smaller.
-    
+
     Args: 
         number_of_humans (int): total amount of humans in the simulation
         number_mask_humans (int): amount of humans that are wearing a face mask
         prob (float): probability of infection for standard humans
-    
+
     Returns:
         humans (list): a list containing all humans (the ones that are wearing a face 
         mask and the ones that are not)
@@ -61,9 +64,11 @@ def wear_mask(humans, number_of_humans, number_mask_humans, infection_radius, pr
         random_number = np.random.randint(int(number_of_humans))
         if humans[random_number].infection_radius == infection_radius:
             humans[random_number].infection_radius *= random.gauss(0.45, 0.2)
-            humans[random_number].infection_probability *= random.gauss(0.45, 0.2)
+            humans[random_number].infection_probability *= random.gauss(
+                0.45, 0.2)
             number_mask_humans -= 1
     return humans
+
 
 def init_sys(
     temperature,
@@ -76,14 +81,14 @@ def init_sys(
     """
     initializes the simulation with a certain number of humans, makes sure the humans wont overlap
     and infects randomly one of them
-    
+
     Args:
         temperature (float): temperature of the system, influcences velocity
         prob (float): probbability of a human getting infected (between 0 and 1)
         world_limit (float): length of the x and y axis
         infection_radius (float): maximum distance a human can infect another
         min_radius (float): minimmal distance between humans
-        
+
     Returns:
         humans (list): list containing all humans
         energy (float): amount of movement in the system
@@ -113,8 +118,9 @@ def init_sys(
             # create velocity
             velocity_gen_x = random.gauss(0, 1)
             velocity_gen_y = random.gauss(0, 1)
-            velocity = [velocity_gen_x * float(temperature), velocity_gen_y * float(temperature)]
-            
+            velocity = [velocity_gen_x *
+                        float(temperature), velocity_gen_y * float(temperature)]
+
             # create the human and put it in the list
             new_human = Human(
                 location,
