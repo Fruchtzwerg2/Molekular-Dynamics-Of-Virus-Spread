@@ -1,4 +1,4 @@
-from enum import Enum
+from enum import Enum 
 import numpy as np
 
 
@@ -42,7 +42,7 @@ class Human:
     ):
         """
         initialises the human
-    
+
         Args:
             location (tuple): position of the human 
             velocity (tuple): velocity of the human
@@ -51,7 +51,7 @@ class Human:
             infection_radius (float): maximum distance a human can infect another
             status (class attribute): status of health (suceptible, infected, recovered) 
             time_till_recovery (float): time till the human is recovered from infection
-        
+
         Attr:
             self._x (float): x-position
             self._y (float): x-position 
@@ -76,12 +76,12 @@ class Human:
         self.infection_probability = infection_probability
         self.status = status
         self.time_till_recovery = time_till_recovery
-        
+
     @property
     def location(self):
         """
         location of the point as tuple
-        
+
         Returns:
             location (array): current location
         """
@@ -91,10 +91,10 @@ class Human:
     def location(self, new_location):
         """
         sets a new location and makes sure the human is already partily out of the graphic
-        
+
         Args:
             new_location (tuple): changed location
-        """ 
+        """
         x = new_location[0]
         y = new_location[1]
         if x >= 100 - self.radius:
@@ -121,7 +121,7 @@ class Human:
     def velocity(self, new_velocity):
         """
         sets a new velocity for the human and creates a bounce off the walls if they are hit
-        
+
         Args:
             new_velocity (tuple): changed velocity
         """
@@ -142,7 +142,7 @@ class Human:
     def acceleration(self):
         """
         acceleration of the point as tuple
-        
+
         Returns:
             acceleration (array): current acceleration
         """
@@ -152,27 +152,27 @@ class Human:
     def acceleration(self, new_acceleration):
         """
         sets a new acceleration for the human
-        
+
         Args:
             new_acceleration (tuple): changed acceleration
-        """ 
+        """
         self._ax = new_acceleration[0]
         self._ay = new_acceleration[1]
 
     @property
     def color(self):
         """
-        gives the color corresponding to the helath status
-        
+        gives the color corresponding to the health status
+
         Returns:
             status_colors (string): color code 
         """
         return status_colors[self.status]
-    
+
     def infect(self, time_till_recovery=200):
         """
         sets status to infected and changes the time till recovery
-        
+
         Args:
             time_till_recovery (float): time of the infection
         """
@@ -184,7 +184,7 @@ class Human:
         updates a human, it is given a new location, velocity,
         if infected the human will count down the time_till_recovery
         until at zero to set the status to RECOVERED.
-        
+
         Args:
             new_location (tuple): changed velocity
             new_velocity (tuple): changed velocity
@@ -208,10 +208,38 @@ class Human:
         """returns True is human is recovered"""
         return self.status == Status.RECOVERED
 
+    def set_location(self, x, y, world_lim=100):
+        """
+        If a Human would have it's origin outside the boundaries, 
+        it will be moved inside.
+        """
+        if x + self.radius > world_lim:
+            x = world_lim - self.radius
+        if x < self.radius:
+            x = self.radius 
+        if y + self.radius > world_lim:
+            y = world_lim - self.radius
+        if y < self.radius:
+            y = self.radius
+        self._x = round(x, 3)
+        self._y = round(y, 3)
+
+    def bounce(self, x, y, vx, vy, world_lim=100):
+        """
+        Calculates the new velocity of a Human that hit a boundary.
+        """
+        if (x < self.radius) or (x + self.radius > world_lim):
+            vx *= -1
+        if (y < self.radius) or (y + self.radius > world_lim):
+            vy *= -1
+        self._vx = vx
+        self._vy = vy
+        self.set_location(x, y)
+
     def will_infect(self, other_human):
         """
         checks if another human gets infected
-        
+
         Args:
             other_human (object): human within the infection radius
         """
